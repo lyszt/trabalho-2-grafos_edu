@@ -2,6 +2,8 @@
 #include "Grafo.h"
 #include <iostream>
 #include <exception>
+#include <vector>
+#include <utility>
 
 void print_exception(const std::exception &e)
 {
@@ -14,7 +16,19 @@ public:
     // network = social network
     int network_nodes;       // vertex
     int network_connections; // edges
+    int removals;
+    int state = 0;
+    std::vector<std::pair<int *, int>> entries = {std::make_pair(&network_nodes, 0), std::make_pair(&network_connections, 0), std::make_pair(&removals, 1)};
 
+    void ReadData()
+    {
+        for (auto entry : entries)
+        {
+            if(state != entry.second) continue;
+            std::cin >> *(entry.first);
+        }
+        state++;
+    }
     ~Input()
     {
     }
@@ -48,16 +62,19 @@ public:
 int main()
 {
     Input input;
+    input.ReadData();
     try
     {
-        std::cin >> input.network_nodes >> input.network_connections;
+
         Graph graph(input.network_nodes);
         for (int i = 0; i < input.network_connections; i++)
         {
             int a, b;
             std::cin >> a >> b;
-            [[maybe_unused]]ConnectionBetween connection(a, b, &graph);
+            [[maybe_unused]] ConnectionBetween connection(a, b, &graph);
         }
+        // Nesse momento lemos o O
+        input.ReadData();
     }
     catch (const std::exception &e)
     {
