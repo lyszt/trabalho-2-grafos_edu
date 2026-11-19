@@ -12,8 +12,8 @@ Graph::Graph(int num_vertices)
     if (num_vertices <= 0)
     {
         throw std::runtime_error("Error in constructor Graph(int): the number of "
-                        "vertices " +
-                        std::to_string(num_vertices) + " is invalid!");
+                                 "vertices " +
+                                 std::to_string(num_vertices) + " is invalid!");
     }
 
     num_vertices_ = num_vertices;
@@ -111,7 +111,7 @@ bool Graph::is_walk(std::vector<int> &vertex_sequence)
     if (vertex_sequence.size() == 0)
     {
         throw std::runtime_error("Error in operation eh_passeio(vector<int> &): the"
-                        " vertex sequence is empty");
+                                 " vertex sequence is empty");
     }
 
     for (int i = 1; i < ((int)vertex_sequence.size()); i++)
@@ -130,7 +130,7 @@ bool Graph::is_path(std::vector<int> &vertex_sequence)
     if (vertex_sequence.size() == 0)
     {
         throw std::runtime_error("Error in operation eh_caminho(vector<int> &): the"
-                        " vertex sequence is empty");
+                                 " vertex sequence is empty");
     }
 
     std::vector<int> visited(num_vertices_);
@@ -176,3 +176,34 @@ std::vector<int> Graph::breadth_first_search(int origin)
     return graph;
 }
 
+int Graph::vertice_max_grau_nao_marcado(std::set<int> marked_set)
+{
+    // degrau mais alto | indice mais baixo se necessario
+    std::pair<int, int> chosen_vertex = {-1, -1};
+
+    for (int vertex = 0; vertex < num_vertices(); vertex++)
+    {
+        if (marked_set.count(vertex) > 0)
+            continue;
+        int degree;
+
+        for (int edge = 0; edge < num_vertices(); edge++)
+        {
+            if (adj_matrix_[vertex][edge] != 0 && marked_set.count(edge) == 0)
+            {
+                degree++;
+            }
+        }
+        if (degree > chosen_vertex.first)
+        {
+            // o caso de haver um igual e maior nunca vai substituir o valor
+            chosen_vertex.first = degree;
+            chosen_vertex.second = vertex;
+        }
+    }
+    return chosen_vertex.second;
+}
+
+int Graph::influenciadores_a_contratar(std::vector<int> vertice_set)
+{
+}
