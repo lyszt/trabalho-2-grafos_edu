@@ -6,7 +6,8 @@
 #include <vector>
 #include <set>
 
-class Graph {
+class Graph
+{
 public:
     Graph(int num_vertices);
     ~Graph();
@@ -23,8 +24,8 @@ public:
     bool is_walk(std::vector<int> &vertex_sequence);
     bool is_path(std::vector<int> &vertex_sequence);
     int vertice_max_grau_nao_marcado(std::set<int> marked_set);
-    int influenciadores_a_contratar(std::vector<int> vertice_set);
-    std::vector<int> breadth_first_search(int origin);
+    std::vector<int> influenciadores_a_contratar();
+    std::vector<int> breadth_first_search(int origin, std::set<int> &outer_marked);
 
 private:
     int num_vertices_;
@@ -35,4 +36,4 @@ private:
     void validate_edge(Edge e);
 };
 
-#endif 
+#endif

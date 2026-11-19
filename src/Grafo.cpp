@@ -150,7 +150,7 @@ bool Graph::is_path(std::vector<int> &vertex_sequence)
     return true;
 }
 
-std::vector<int> Graph::breadth_first_search(int origin)
+std::vector<int> Graph::breadth_first_search(int origin, std::set<int> &outer_marked)
 {
     std::vector<int> graph;
     std::set<int> visited;
@@ -185,7 +185,7 @@ int Graph::vertice_max_grau_nao_marcado(std::set<int> marked_set)
     {
         if (marked_set.count(vertex) > 0)
             continue;
-        int degree;
+        int degree = 0;
 
         for (int edge = 0; edge < num_vertices(); edge++)
         {
@@ -204,6 +204,24 @@ int Graph::vertice_max_grau_nao_marcado(std::set<int> marked_set)
     return chosen_vertex.second;
 }
 
-int Graph::influenciadores_a_contratar(std::vector<int> vertice_set)
+std::vector<int> Graph::influenciadores_a_contratar()
 {
+    std::set<int> vertices;
+    std::vector<int> influencers;
+    while(vertices.size() != num_vertices_) {
+        int non_marked = vertice_max_grau_nao_marcado(vertices);
+        if(non_marked == -1) break;
+        
+        influencers.push_back(non_marked);
+        vertices.emplace(non_marked);
+        for (int edge = 0; edge < num_vertices(); edge++)
+        {
+            if (adj_matrix_[non_marked][edge] != 0 && vertices.count(edge) == 0)
+            {
+                vertices.emplace(edge);
+            }
+        }
+    }
+    std::sort(influencers.begin(), influencers.end());
+    return influencers;
 }

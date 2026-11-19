@@ -17,9 +17,8 @@ public:
     int network_nodes;       // vertex
     int network_connections; // edges
     int removals;
-    std::vector<std::pair<int,int>> removal_list;
+    std::vector<std::pair<int, int>> removal_list;
     int state = 0;
-    
 
     std::vector<std::pair<int *, int>> entries = {
         std::make_pair(&network_nodes, 0),
@@ -35,34 +34,42 @@ public:
                 continue;
             std::cin >> *(entry.first);
         }
-        switch(state) {
-            case 1:
-                for (int i = 0; i < network_connections; i++) {
-                    int a, b;
-                    std::cin >> a >> b;
-                    graph->insert_edge(Edge(a, b));
-                }
-                break;
-            case 2:
-                removal_list.resize(removals);
-                for(int i = 0; i < removals; i++) {
-                    std::cin >> removal_list[i].first;
-                    std::cin >> removal_list[i].second;
-                }
-                break;
-            default:
-                break;
+        switch (state)
+        {
+        case 1:
+            for (int i = 0; i < network_connections; i++)
+            {
+                int a, b;
+                std::cin >> a >> b;
+                graph->insert_edge(Edge(a, b));
+            }
+            break;
+        case 2:
+        {
+            removal_list.resize(removals);
+            for (int i = 0; i < removals; i++)
+            {
+                std::cin >> removal_list[i].first;
+                std::cin >> removal_list[i].second;
+            }
+            break;
+        }
+        default:
+            break;
         };
         state++;
     }
-
-
-
+    
+    static void print(std::vector<int> list) {
+        std::cout << list.size() << ":";
+            for (int vertice : list)
+                std::cout << " " << vertice;
+            std::cout << "\n";
+    }
     ~Input()
     {
     }
 };
-
 
 int main()
 {
@@ -75,8 +82,20 @@ int main()
         Graph graph(input.network_nodes);
         // Leitura dos dados do grafo / conexões
         input.ReadData(&graph);
-        // Nesse momento lemos o O
+        // Nesse momento lemos o O, removemos e imprimimos
         input.ReadData(&graph);
+
+        std::vector<int> influencers = graph.influenciadores_a_contratar();
+        input.print(influencers);
+
+        for (const auto &removal : input.removal_list)
+        {
+            graph.remove_edge(Edge(removal.first, removal.second));
+            influencers = graph.influenciadores_a_contratar();
+            input.print(influencers);
+            
+        }
+
     }
     catch (const std::exception &e)
     {
